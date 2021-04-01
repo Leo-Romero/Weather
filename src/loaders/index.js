@@ -3,13 +3,13 @@ const config = require('../config')
 const logger = require('./logger')
 
 const startServer = async () => {
-
+    
     const server = new ExpressServer()
-    logger.info('Express cargado.')
+    logger.info('Express Loaded')
 
     server.start()
     logger.info(`** Servidor escuchando en el puerto: ${config.port} **`)
-
 }
 
 module.exports = startServer
+

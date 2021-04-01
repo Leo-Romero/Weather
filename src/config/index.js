@@ -3,8 +3,8 @@ const dotenv = require('dotenv')
 
 // si no existe .env
 const envFound = dotenv.config()
-if(!envFound) {
-    throw new Error('No se encuentra archivo .env')
+if(!envFound){
+    throw new Error("Couldn't find .env file.")
 }
 
 // entorno
@@ -20,5 +20,13 @@ module.exports = {
     },
     swagger: {
         path: '/api-docs'
+    },
+    mapbox: {
+        pathBase: 'https://api.mapbox.com/geocoding/v5/mapbox.places/',
+        apikey: process.env.MAPBOX_API_KEY
+    },
+    openweathermap: {
+        pathBase: 'https://api.openweathermap.org/data/2.5/weather',
+        apikey: process.env.OPENWEATHERMAP_API_KEY
     }
 }

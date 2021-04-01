@@ -1,7 +1,6 @@
 const winston = require('winston')
 const config = require('../../config')
 
-
 const transports = []
 transports.push(
     new winston.transports.Console(),

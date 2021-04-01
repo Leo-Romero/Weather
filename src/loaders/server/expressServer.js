@@ -10,15 +10,17 @@ class ExpressServer {
     constructor() {
         this.app = express()
         this.port = config.port
-        this.basePathUsers = `${config.api.prefix}/users`
+        this.basePathWeather = `${config.api.prefix}/weather`
+        this.basePathCities = `${config.api.prefix}/cities`
 
         this._middlewares()
+        
         this._swaggerConfig()
+
         this._routes()
 
         this._notFound()
         this._errorHandler()
-
     }
 
     _middlewares() {
@@ -30,11 +32,12 @@ class ExpressServer {
 
     _routes() {
         // para corroborar si la app está viva
-        this.app.head('/status', (req, res) => {
+        this.app.head("/status", (req, res) => {
             res.status(200).end()
         })
 
-        this.app.use(this.basePathUsers, require('../../routes/users'))
+        this.app.use(this.basePathWeather, require('../../routes/weather'))
+        this.app.use(this.basePathCities, require('../../routes/cities'))
     }
 
     _notFound() {
@@ -42,13 +45,13 @@ class ExpressServer {
             const err = new Error("Not Found")
             err.code = 404
             next(err)
-        })
+        });
     }
 
     _errorHandler() {
         this.app.use((err, req, res, next) => {
             const code = err.code || 500    // Si NO viene code code = 500
-            
+
             logger.error(`${code} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
             logger.error(err.stack)
 
@@ -58,28 +61,27 @@ class ExpressServer {
                     message: err.message
                 }
             }
-            res.json(body)
+            res.status(code).json(body)
         })
     }
 
     _swaggerConfig() {
         this.app.use(
-            config.swagger.path,
-            swaggerUi.serve,
+            config.swagger.path, 
+            swaggerUi.serve, 
             swaggerUi.setup(require('../swagger/swagger.json'))
         )
     }
 
     async start() {
-        this.app.listen(this.port, (error)=>{
+        this.app.listen(this.port, (error) => {
             if(error) {
-                logger.error(error)
+                logger.error(err)
                 process.exit(1)
                 return
             }
         })
     }
-
 }
 
 module.exports = ExpressServer
